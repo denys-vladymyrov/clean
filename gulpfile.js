@@ -6,6 +6,7 @@ var gulp = require('gulp'),
   browserSync = require('browser-sync').create(),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify');
+  sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('browser-sync', ['styles', 'scripts'], function () {
   browserSync.init({
@@ -18,10 +19,12 @@ gulp.task('browser-sync', ['styles', 'scripts'], function () {
 
 gulp.task('styles', function () {
   return gulp.src('sass/*.scss')
+    .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(rename({suffix: '.min', prefix: ''}))
     .pipe(autoprefixer({browsers: ['last 15 versions'], cascade: false}))
     .pipe(cleanCSS())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('app/css'))
     .pipe(browserSync.stream());
 });
